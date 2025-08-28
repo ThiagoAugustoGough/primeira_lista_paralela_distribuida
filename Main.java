@@ -1,29 +1,42 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.Stack;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+
 public class Main {
     public static void main(String[] args) {
+        List<Tarefa> lista_tarefas = new ArrayList<>();
+        Scanner scan = new Scanner(System.in);
 
-        Scanner scanner = new Scanner(System.in);
 
-        System.out.printf("-- Sistema Download --\n");
-        System.out.printf("Digite o tamanho(MB) do arquivo: ");
-        double tam = scanner.nextDouble();
 
-        System.out.printf("Digite a quantidade de partes: ");
-        int partes = scanner.nextInt();
+        // Popular lista de tarefas
 
-        System.out.printf("Digite o velocidade de dowload minima: ");
-        double velocidade_minima = scanner.nextDouble();
+        Tarefa t1 = new Tarefa("Primeira Tarefa", 1400);
+        Tarefa t2 = new Tarefa("Segunda Tarefa", 7800);
+        Tarefa t3 = new Tarefa("Terceira Tarefa", 800);
+        Tarefa t4 = new Tarefa("Quarta Tarefa", 5400);
+        Tarefa t5 = new Tarefa("Quinta Tarefa", 3032);
 
-        System.out.printf("Digite o velocidade de dowload maxima: ");
-        double velocidade_maxima = scanner.nextDouble();
+        lista_tarefas.add(t1);
+        lista_tarefas.add(t2);
+        lista_tarefas.add(t3);
+        lista_tarefas.add(t4);
+        lista_tarefas.add(t5);
 
-        double tamanho_download = tam / partes;
+        System.out.println("Digite o numero maximo de tarefas paralelas : ");
+        int num_maximo = scan.nextInt();
 
-        for (int i = 1; i <= partes; i++){
-            double speed = velocidade_minima + (velocidade_maxima - velocidade_minima) * Math.random();
-            Thread thread = new Thread(new Downloader(speed, tamanho_download));
-            thread.start();
+        ExecutorService executorService = Executors.newFixedThreadPool(num_maximo);
+
+        for (Tarefa tarefa : lista_tarefas) {
+            executorService.submit(tarefa);
         }
-        
+
+        executorService.shutdown();
+
     }
 }
